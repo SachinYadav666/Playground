@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     "playground-ysyi.onrender.com"
 ]
 
+
 CORS_ALLOW_ALL_ORIGINS = True  # Allows requests from any frontend
 
 # Application definition

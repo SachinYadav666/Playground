@@ -12,4 +12,5 @@ sentence-transformers
 numpy==1.26.2
 faiss-cpu
 langchain_huggingface
+gunicorn
 
