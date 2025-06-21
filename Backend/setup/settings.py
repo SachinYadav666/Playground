@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure--y(q1py2tq8+8-%tp^8v6(%2%0(@3v!#)hbpb*6r^5t41mu$70
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "playground-ysyi.onrender.com"
+    "playground-1-vec8.onrender.com"
 ]
 
 
