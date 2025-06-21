@@ -1,0 +1,15 @@
+django
+djangorestframework
+requests
+django-cors-headers
+dotenv
+langchain 
+langchain_community 
+langchain-openai
+scikit-learn 
+langchain_groq
+sentence-transformers
+numpy==1.26.2
+faiss-cpu
+langchain_huggingface
+

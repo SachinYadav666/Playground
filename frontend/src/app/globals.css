@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-green: #52C841;
+    
+    /* Light theme colors */
+    --bg-primary-light: #ffffff;
+    --bg-secondary-light: #f8fafb;
+    --text-primary-light: #1a1a1a;
+    --text-secondary-light: #666666;
+    --border-light: #e5e7eb;
+    --message-bg-light: #f3f4f6;
+    
+    /* Dark theme colors */
+    --bg-primary-dark: #0A1512;
+    --bg-secondary-dark: #0E1916;
+    --text-primary-dark: #ffffff;
+    --text-secondary-dark: #9ca3af;
+    --border-dark: #1E2B23;
+    --message-bg-dark: #1E2B23;
+  }
+}
+
+@layer components {
+  .message-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .theme-toggle {
+    @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300;
+  }
+
+  .theme-toggle-thumb {
+    @apply pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-300;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(circle at center, var(--primary-green) 0%, transparent 70%);
+  opacity: 0.3;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.input-container {
+  @apply border border-opacity-10;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+.light .input-container {
+  @apply bg-white border-gray-200;
+  backdrop-filter: none;
+}
+
+.icon-button {
+  @apply p-2 rounded-full transition-colors duration-200;
+}
+
+.dark .icon-button:hover {
+  @apply bg-chat-border;
+}
+
+.light .icon-button:hover {
+  @apply bg-gray-100;
+}
+
+/* Light theme specific styles */
+.light {
+  @apply bg-white text-gray-900;
+}
+
+.light .message-bot {
+  @apply bg-gray-100 text-gray-800;
+}
+
+.light .message-user {
+  @apply bg-chat-green text-white;
+}
+
+/* Dark theme specific styles */
+.dark {
+  @apply bg-chat-dark text-white;
+}
+
+.dark .message-bot {
+  @apply bg-chat-border text-gray-200;
+}
+
+.dark .message-user {
+  @apply bg-chat-green text-white;
+}
