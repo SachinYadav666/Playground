@@ -56,7 +56,7 @@ export default function ChatPage() {
     formData.append("question", "Initial file upload");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/chat/", {
+      const response = await fetch("https://playground-1-vec8.onrender.com/playground/chat/", {
         method: "POST",
         body: formData,
       });
@@ -191,7 +191,7 @@ export default function ChatPage() {
         formData.append("refresh_id", fileRefreshId);
         formData.append("mode", "FileUpload");
 
-        response = await fetch("http://127.0.0.1:8000/chat/", {
+        response = await fetch("https://playground-1-vec8.onrender.com/playground/chat/", {
           method: "POST",
           body: formData,
         });
@@ -202,7 +202,7 @@ export default function ChatPage() {
         formData.append("prompt", input);
         formData.append("mode", "ImageSearch");
 
-        response = await fetch("http://127.0.0.1:8000/chat/", {
+        response = await fetch("https://playground-1-vec8.onrender.com/playground/chat/", {
           method: "POST",
           body: formData,
         });
@@ -212,7 +212,7 @@ export default function ChatPage() {
         setMode("NormalSearch");
       } else {
         // Handle normal chat
-        response = await fetch("http://127.0.0.1:8000/chat/", {
+        response = await fetch("https://playground-1-vec8.onrender.com/playground/chat/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ mode, prompt: input }),
