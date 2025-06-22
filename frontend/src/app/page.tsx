@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { SendHorizontal, Menu, Paperclip, Image, Settings, Search, Sun, Moon } from "lucide-react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 export default function ChatPage() {
   const [chats, setChats] = useState<{ id: number; title: string; messages: { text: string; type: "user" | "bot"; imageUrl?: string }[] }[]>([]);
@@ -92,7 +92,7 @@ export default function ChatPage() {
   });
 
   
-  toast.success("File uploaded successfully!");
+  // toast.success("File uploaded successfully!");
 }
 
     } catch (error) {
