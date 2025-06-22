@@ -19,7 +19,7 @@ export default function ChatPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const BASE_URL="http://127.0.0.1:8000/playground/chat/"
-  const BASE_URL_DEPLOYED="http://127.0.0.1:8000/playground/chat/"
+  const BASE_URL_DEPLOYED="https://playground-1-vec8.onrender.com/playground/chat/"
   // Theme handling
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
