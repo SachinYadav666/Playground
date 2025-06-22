@@ -13,12 +13,13 @@ export default function ChatPage() {
   const [mode, setMode] = useState<"NormalSearch" | "ImageSearch" | "WebSearch" | "FileUpload">("NormalSearch");
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [fileSentOnce, setFileSentOnce] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<File | null>(null);
   const [fileRefreshId, setFileRefreshId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const BASE_URL="http://127.0.0.1:8000/playground/chat/"
-  const BASE_URL_DEPLOYED="https://playground-1-vec8.onrender.com/playground/chat/"
+  const BASE_URL_DEPLOYED="http://127.0.0.1:8000/playground/chat/"
   // Theme handling
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -39,88 +40,46 @@ export default function ChatPage() {
   const currentChat = chats.find((chat) => chat.id === currentChatId) || { messages: [] };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const file = event.target.files?.[0];
+  if (!file) return;
 
-    // Generate a new refresh_id for this file session
-    const refreshId = "file-" + Date.now();
-    
-    // Create a new chat if none exists
-    const newChatId = currentChatId ?? chats.length + 1;
-    if (currentChatId === null) {
-      setCurrentChatId(newChatId);
-    }
-
-    // Upload the file first
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("mode", "FileUpload");
-    formData.append("refresh_id", refreshId);
-    formData.append("question", "what this file about");
-
-    try {
-      const response = await fetch(BASE_URL_DEPLOYED, {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-      
-      if (data.answer) {
-  setFileRefreshId(refreshId);
+  const refreshId = "file-" + Date.now();
+  setUploadedFile(file);          
+  setFileSentOnce(false); 
+  setFileRefreshId(refreshId);    
   setMode("FileUpload");
 
-  setChats(prevChats => {
-    const updatedChats = [...prevChats];
-    const chatIndex = updatedChats.findIndex(chat => chat.id === newChatId);
+  if (currentChatId === null) {
+    const newChatId = chats.length + 1;
+    setCurrentChatId(newChatId);
 
-    if (chatIndex === -1) {
-      updatedChats.unshift({
+    setChats(prev => [
+      {
         id: newChatId,
         title: `File: ${file.name}`,
         messages: [
-          { text: data.answer, type: "bot" }
+          { text: "File uploaded. Please enter your question.", type: "bot" }
         ]
-      });
-    } else {
-      updatedChats[chatIndex].messages.push(
-        { text: data.answer, type: "bot" }
-      );
-    }
+      },
+      ...prev
+    ]);
+  } else {
+    setChats(prev =>
+      prev.map(chat =>
+        chat.id === currentChatId
+          ? {
+              ...chat,
+              messages: [
+                ...chat.messages,
+                { text: "File uploaded. Please enter your question.", type: "bot" }
+              ]
+            }
+          : chat
+      )
+    );
+  }
+};
 
-    return updatedChats;
-  });
-
-  
-  // toast.success("File uploaded successfully!");
-}
-
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setChats(prevChats => {
-        const updatedChats = [...prevChats];
-        const chatIndex = updatedChats.findIndex(chat => chat.id === newChatId);
-        
-        if (chatIndex === -1) {
-          // Create new chat with error message
-          updatedChats.unshift({
-            id: newChatId,
-            title: `File: ${file.name}`,
-            messages: [
-              { text: "Error uploading file. Please try again.", type: "bot" }
-            ]
-          });
-        } else {
-          // Add error message to existing chat
-          updatedChats[chatIndex].messages.push(
-            { text: "Error uploading file. Please try again.", type: "bot" }
-          );
-        }
-        
-        return updatedChats;
-      });
-    }
-  };
 
   const handleImageSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -190,13 +149,17 @@ export default function ChatPage() {
       formData.append("refresh_id", fileRefreshId);
       formData.append("mode", "FileUpload");
 
+      if (!fileSentOnce && uploadedFile) {
+        formData.append("file", uploadedFile);      
+        setFileSentOnce(true);                      
+      }
+
       response = await fetch(BASE_URL_DEPLOYED, {
         method: "POST",
         body: formData,
-  });
-
-
-    } else if (mode === "ImageSearch" && uploadedImage) {
+      });
+    }
+ else if (mode === "ImageSearch" && uploadedImage) {
       const formData = new FormData();
       formData.append("image", uploadedImage);
       formData.append("prompt", input);
@@ -365,7 +328,21 @@ export default function ChatPage() {
                       className="max-w-full h-auto rounded-lg mb-2"
                     />
                   )}
-                  {msg.text}
+                  {msg.type === "bot" && mode === "FileUpload" && uploadedFile ? (
+  <span>
+    {msg.text}
+    <span className="tooltip" >
+  {" "}📎
+  <span className="tooltiptext">
+    Result coming from file: {uploadedFile.name}
+  </span>
+</span>
+
+  </span>
+) : (
+  msg.text
+)}
+
                 </div>
               </div>
             ))
